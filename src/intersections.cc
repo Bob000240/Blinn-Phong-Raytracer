@@ -3,8 +3,8 @@
 
 bool hitSphere(const sphere &s, const Ray &ray, double &tHit)
 {
-    vec center(s.cx, s.cy, s.cz);
-    vec oc = ray.orig - center;
+    vec3 center(s.cx, s.cy, s.cz);
+    vec3 oc = ray.orig - center;
 
     double A = ray.direc.dot(ray.direc);
     double B = 2 * oc.dot(ray.direc);
@@ -41,12 +41,12 @@ bool hitSphere(const sphere &s, const Ray &ray, double &tHit)
 
 bool hitCylinder(const cylinder &s, const Ray &ray, double &tHit)
 {
-    vec base(s.cx, s.cy, s.cz);
-    vec axis(s.dx, s.dy, s.dz);
+    vec3 base(s.cx, s.cy, s.cz);
+    vec3 axis(s.dx, s.dy, s.dz);
     axis = axis.unit();
 
-    vec f = ray.orig - base;
-    vec d = ray.direc;
+    vec3 f = ray.orig - base;
+    vec3 d = ray.direc;
 
     double A = d.dot(d) - (d.dot(axis) * d.dot(axis));
     double B = 2 * (d.dot(f) - (d.dot(axis) * f.dot(axis)));
@@ -65,7 +65,7 @@ bool hitCylinder(const cylinder &s, const Ray &ray, double &tHit)
 
     if (t0 > 0)
     {
-        vec x0 = ray.orig + d * t0;
+        vec3 x0 = ray.orig + d * t0;
         double proj0 = (x0 - base).dot(axis);
         if (proj0 >= 0 && proj0 <= s.length)
         {
@@ -76,7 +76,7 @@ bool hitCylinder(const cylinder &s, const Ray &ray, double &tHit)
 
     if (t1 > 0)
     {
-        vec x1 = ray.orig + d * t1;
+        vec3 x1 = ray.orig + d * t1;
         double proj1 = (x1 - base).dot(axis);
         if (proj1 >= 0 && proj1 <= s.length && t1 < best)
         {
@@ -92,14 +92,14 @@ bool hitCylinder(const cylinder &s, const Ray &ray, double &tHit)
     return true;
 }
 
-bool hitCone(const Cone &s, const Ray &ray, double &tHit)
+bool hitCone(const cone &s, const Ray &ray, double &tHit)
 {
-    vec tip(s.cx, s.cy, s.cz);
-    vec axis(s.dx, s.dy, s.dz);
+    vec3 tip(s.cx, s.cy, s.cz);
+    vec3 axis(s.dx, s.dy, s.dz);
     axis = axis.unit();
 
-    vec v = ray.orig - tip;
-    vec d = ray.direc;
+    vec3 v = ray.orig - tip;
+    vec3 d = ray.direc;
 
     double theta = s.angle * M_PI / 180.0;
     double cosT = std::cos(theta);
@@ -128,7 +128,7 @@ bool hitCone(const Cone &s, const Ray &ray, double &tHit)
 
     if (t0 > 0)
     {
-        vec x0 = ray.orig + d * t0;
+        vec3 x0 = ray.orig + d * t0;
         double h0 = (x0 - tip).dot(axis);
         if (h0 >= 0 && h0 <= s.height)
         {
@@ -139,7 +139,7 @@ bool hitCone(const Cone &s, const Ray &ray, double &tHit)
 
     if (t1 > 0)
     {
-        vec x1 = ray.orig + d * t1;
+        vec3 x1 = ray.orig + d * t1;
         double h1 = (x1 - tip).dot(axis);
         if (h1 >= 0 && h1 <= s.height && t1 < best)
         {
@@ -152,5 +152,53 @@ bool hitCone(const Cone &s, const Ray &ray, double &tHit)
         return false;
 
     tHit = best;
+    return true;
+}
+
+bool hitTriangle(const triangle &tri, const Ray &ray,
+                 double &tHit, double &A, double &B, double &C)
+{
+    const double EPS = 1e-8;
+    vec3 v0 = tri.v0;
+    vec3 v1 = tri.v1;
+    vec3 v2 = tri.v2;
+
+    vec3 e1 = v1 - v0;
+    vec3 e2 = v2 - v0;
+    vec3 n = e1.cross(e2);
+
+    if (n.norm() < EPS)
+        return false;
+
+    double denom = n.dot(ray.direc);
+
+    if (std::abs(denom) < EPS)
+        return false;
+
+    double t = n.dot(v0 - ray.orig) / denom;
+    if (t <= EPS)
+        return false;
+
+    vec3 p = ray.orig + ray.direc * t;
+
+    vec3 c0 = (v1 - v0).cross(p - v0);
+    if (n.dot(c0) < 0)
+        return false;
+
+    vec3 c1 = (v2 - v1).cross(p - v1);
+    if (n.dot(c1) < 0)
+        return false;
+
+    vec3 c2 = (v0 - v2).cross(p - v2);
+    if (n.dot(c2) < 0)
+        return false;
+
+    double area2 = n.dot(n);
+
+    A = n.dot((v1 - p).cross(v2 - p)) / area2;
+    B = n.dot((v2 - p).cross(v0 - p)) / area2;
+    C = n.dot((v0 - p).cross(v1 - p)) / area2;
+
+    tHit = t;
     return true;
 }

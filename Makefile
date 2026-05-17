@@ -1,9 +1,9 @@
 CXX = g++
 CXXFLAGS = -std=c++20 -Iinclude
 
-TARGET = raytracer1b
+TARGET = raytracer
 
-SRCS = hw1b.Bob.Su.cc \
+SRCS = main.cc \
        src/vec.cc \
        src/color.cc \
        src/intersections.cc \

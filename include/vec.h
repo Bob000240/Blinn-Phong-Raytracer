@@ -3,25 +3,35 @@
 
 #include <vector>
 
-class vec
+class vec3
 {
-private:
-    double x, y, z;
-
 public:
-    vec(double x = 0, double y = 0, double z = 0);
-    vec(std::vector<double> v);
+    double x, y, z;
+    vec3(double x = 0, double y = 0, double z = 0);
+    vec3(std::vector<double> v);
 
-    vec operator-() const;
-    vec operator-(const vec &other) const;
-    vec operator+(const vec &other) const;
-    vec operator*(double scalar) const;
-    vec operator/(double scalar) const;
+    vec3 operator-() const;
+    vec3 operator-(const vec3 &other) const;
+    vec3 operator+(const vec3 &other) const;
+    vec3 operator*(double scalar) const;
+    vec3 operator/(double scalar) const;
 
-    double dot(const vec &other) const;
-    vec cross(const vec &other) const;
+    double dot(const vec3 &other) const;
+    vec3 cross(const vec3 &other) const;
     double norm() const;
-    vec unit() const;
+    vec3 unit() const;
+};
+
+class vec2
+{
+public:
+    double x, y;
+    vec2(double x = 0, double y = 0);
+    vec2(std::vector<double> v);
+    vec2 operator-() const;
+    vec2 operator-(const vec2 &other) const;
+    vec2 operator+(const vec2 &other) const;
+    vec2 operator*(double scalar) const;
 };
 
 #endif

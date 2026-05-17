@@ -1,30 +1,37 @@
 #include "vec.h"
 #include <cmath>
 
-vec::vec(double x, double y, double z) : x(x), y(y), z(z) {}
-vec::vec(std::vector<double> v) : x(v[0]), y(v[1]), z(v[2]) {}
+vec3::vec3(double x, double y, double z) : x(x), y(y), z(z) {}
+vec3::vec3(std::vector<double> v) : x(v[0]), y(v[1]), z(v[2]) {}
 
-vec vec::operator-() const { return vec(-x, -y, -z); }
-vec vec::operator-(const vec &other) const { return vec(x - other.x, y - other.y, z - other.z); }
-vec vec::operator+(const vec &other) const { return vec(x + other.x, y + other.y, z + other.z); }
-vec vec::operator*(double scalar) const { return vec(x * scalar, y * scalar, z * scalar); }
-vec vec::operator/(double scalar) const { return vec(x / scalar, y / scalar, z / scalar); }
+vec3 vec3::operator-() const { return vec3(-x, -y, -z); }
+vec3 vec3::operator-(const vec3 &other) const { return vec3(x - other.x, y - other.y, z - other.z); }
+vec3 vec3::operator+(const vec3 &other) const { return vec3(x + other.x, y + other.y, z + other.z); }
+vec3 vec3::operator*(double scalar) const { return vec3(x * scalar, y * scalar, z * scalar); }
+vec3 vec3::operator/(double scalar) const { return vec3(x / scalar, y / scalar, z / scalar); }
 
-double vec::dot(const vec &other) const { return x * other.x + y * other.y + z * other.z; }
+double vec3::dot(const vec3 &other) const { return x * other.x + y * other.y + z * other.z; }
 
-vec vec::cross(const vec &other) const
+vec3 vec3::cross(const vec3 &other) const
 {
-    return vec(y * other.z - z * other.y,
-               z * other.x - x * other.z,
-               x * other.y - y * other.x);
+    return vec3(y * other.z - z * other.y,
+                z * other.x - x * other.z,
+                x * other.y - y * other.x);
 }
 
-double vec::norm() const { return std::sqrt(x * x + y * y + z * z); }
+double vec3::norm() const { return std::sqrt(x * x + y * y + z * z); }
 
-vec vec::unit() const
+vec3 vec3::unit() const
 {
     double n = norm();
     if (n == 0)
-        return vec(0, 0, 0);
-    return vec(x / n, y / n, z / n);
+        return vec3(0, 0, 0);
+    return vec3(x / n, y / n, z / n);
 }
+
+vec2::vec2(double x, double y) : x(x), y(y) {}
+vec2::vec2(std::vector<double> v) : x(v[0]), y(v[1]) {}
+vec2 vec2::operator-() const { return vec2(-x, -y); }
+vec2 vec2::operator-(const vec2 &other) const { return vec2(x - other.x, y - other.y); }
+vec2 vec2::operator+(const vec2 &other) const { return vec2(x + other.x, y + other.y); }
+vec2 vec2::operator*(double scalar) const { return vec2(x * scalar, y * scalar); }
