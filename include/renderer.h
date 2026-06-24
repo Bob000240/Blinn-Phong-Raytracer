@@ -10,10 +10,9 @@ class Renderer
 public:
     Renderer(const Camera &camera, const Scene &scene);
     void render(const std::string &outputFile);
-    Ray generateRay(int i, int j) const { return cam.generateRay(i, j); }
-    Color traceRay(const Ray &ray) const { return recursiveTrace(ray, 5); }
 
 private:
+    static void *worker(void *arg);
     const Camera &cam;
     const Scene  &scene;
 

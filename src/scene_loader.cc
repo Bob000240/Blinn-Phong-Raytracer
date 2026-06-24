@@ -271,7 +271,6 @@ LoadResult SceneLoader::load(const std::string &filename)
 
             tri.mat = currentMat;
             tri.mat.textureId = currentTextureId;
-            tri.mat.bumpId    = -1;
 
             result.scene.triangles.push_back(tri);
         }

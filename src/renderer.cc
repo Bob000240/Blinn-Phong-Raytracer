@@ -214,7 +214,7 @@ struct BlockWork {
     pthread_mutex_t mutex;
 };
 
-static void *worker(void *arg)
+void *Renderer::worker(void *arg)
 {
     BlockWork *work = (BlockWork *)arg;
 
@@ -231,7 +231,7 @@ static void *worker(void *arg)
         for (int j = b.y0; j < b.y1; j++)
             for (int i = b.x0; i < b.x1; i++)
                 (*work->fb)[j * work->W + i] =
-                    work->renderer->traceRay(work->renderer->generateRay(i, j));
+                    work->renderer->recursiveTrace(work->renderer->cam.generateRay(i, j), 5);
     }
 
     return NULL;

@@ -25,7 +25,6 @@ struct Material
     double ka = 1, kd = 1, ks = 1;
     int shininess = 0;
     int textureId = -1;
-    int bumpId = -1;
     double alpha = 0;
     double eta = 1;
 };
@@ -52,13 +51,6 @@ struct sphere
 {
     double cx, cy, cz;
     double radius;
-    Material mat;
-};
-
-struct ellipsoid
-{
-    double cx, cy, cz;
-    double rx, ry, rz;
     Material mat;
 };
 
